@@ -1,0 +1,537 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>سجل الدروس الخصوصية</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f5f6fa;--grid:#e8e9ef;--card:#fff;--ink:#14213d;--mut:#667085;--line:#d7dbe5;--pri:#14213d;--priT:#fff;--ok:#1d7a4a;--okB:#e1f3e8;--bad:#b3341f;--badB:#fbe6e1;--warn:#8a5a00;--warnB:#fdf0d2;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0e1b1a;--grid:#162a28;--card:#142524;--ink:#e4f0ee;--mut:#8fa9a6;--line:#27403e;--pri:#4fc3bb;--priT:#06201f;--ok:#6fd49b;--okB:#15382a;--bad:#ff9a86;--badB:#3d1d17;--warn:#f0c15c;--warnB:#3a2d0c}}
+:root[data-theme="dark"]{--bg:#0e1b1a;--grid:#162a28;--card:#142524;--ink:#e4f0ee;--mut:#8fa9a6;--line:#27403e;--pri:#4fc3bb;--priT:#06201f;--ok:#6fd49b;--okB:#15382a;--bad:#ff9a86;--badB:#3d1d17;--warn:#f0c15c;--warnB:#3a2d0c}
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background-color:var(--bg);background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);background-size:28px 28px;color:var(--ink);font-family:"IBM Plex Sans Arabic",Tahoma,sans-serif;line-height:1.6}
+.wrap{max-width:880px;margin:0 auto;padding:16px 14px 60px}
+h1{font-size:1.5rem;margin:6px 0 2px}
+.sub{color:var(--mut);margin:0 0 14px;font-size:.92rem}
+.total{background:var(--pri);color:var(--priT);border-radius:14px;padding:16px 18px;display:flex;flex-wrap:wrap;gap:6px 24px;align-items:baseline;justify-content:space-between}
+.total .big{font-size:2.1rem;font-weight:700;line-height:1.2}
+.total small{opacity:.85;display:block;font-size:.85rem}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:8px;margin:10px 0 14px}
+.stat{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:8px 12px}
+.stat b{display:block;font-size:1.1rem}.stat span{color:var(--mut);font-size:.82rem}
+nav{display:flex;gap:4px;border-bottom:2px solid var(--line);margin-bottom:14px}
+nav button{flex:1;background:none;border:0;padding:10px 4px;font:inherit;font-weight:500;color:var(--mut);cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-2px}
+nav button.on{color:var(--pri);border-bottom-color:var(--pri);font-weight:700}
+.box{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px;margin-bottom:14px}
+.box h2{font-size:1.05rem;margin:0 0 10px}
+.row{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}
+label{display:block;font-size:.85rem;color:var(--mut);margin-bottom:2px}
+input,select,textarea{width:100%;font:inherit;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:8px 10px}
+input:focus-visible,select:focus-visible,button:focus-visible,textarea:focus-visible{outline:2px solid var(--pri);outline-offset:1px}
+.btn{font:inherit;font-weight:700;background:var(--pri);color:var(--priT);border:0;border-radius:8px;padding:9px 16px;cursor:pointer}
+.btn.ghost{background:transparent;color:var(--pri);border:1px solid var(--pri)}
+.btn.sm{padding:4px 10px;font-size:.82rem}
+.btn.del{background:transparent;color:var(--bad);border:1px solid var(--bad)}
+.chip{display:inline-block;border-radius:99px;padding:1px 10px;font-size:.8rem;font-weight:500}
+.ok{background:var(--okB);color:var(--ok)}.bad{background:var(--badB);color:var(--bad)}.warn{background:var(--warnB);color:var(--warn)}
+.sess{border:1px solid var(--line);border-inline-start:5px solid var(--pri);border-radius:10px;background:var(--card);padding:10px 12px;margin-bottom:10px}
+.sess.absent{border-inline-start-color:var(--bad)}
+.sess .top{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;align-items:center}
+.sess .meta{color:var(--mut);font-size:.88rem;margin:2px 0 8px}
+.sess .acts{display:flex;gap:8px;flex-wrap:wrap;align-items:end}
+.sess .acts>div{width:110px}
+.stars{color:#d99a00;letter-spacing:1px}
+.empty{text-align:center;color:var(--mut);padding:22px 8px}
+.scroll{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:.88rem;min-width:860px}
+th,td{padding:7px 8px;border-bottom:1px solid var(--line);text-align:start;white-space:nowrap}
+th{color:var(--mut);font-weight:500}
+tfoot td{font-weight:700;border-top:2px solid var(--ink)}
+.n{font-variant-numeric:tabular-nums}
+.bar{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:8px}
+.save{position:fixed;inset-inline-start:12px;bottom:calc(10px + env(safe-area-inset-bottom,0px));background:var(--ink);color:var(--bg);border-radius:8px;padding:4px 12px;font-size:.8rem;opacity:0;transition:opacity .2s}
+.save.on{opacity:.9}
+:root{--g1:#14213d;--g2:#9a762c;--g3:#d8b45a}
+:root[data-skin="magic"]{--pri:#7c3aed;--priT:#fff;--g1:#7c3aed;--g2:#c026d3;--g3:#e11d48}
+:root[data-skin="sunset"]{--pri:#e0531f;--priT:#fff;--g1:#e11d48;--g2:#ea580c;--g3:#d97706}
+:root[data-skin="ocean"]{--pri:#0369a1;--priT:#fff;--g1:#0369a1;--g2:#4f46e5;--g3:#0891b2}
+:root[data-skin="aurora"]{--pri:#059669;--priT:#fff;--g1:#047857;--g2:#0e7490;--g3:#6d28d9}
+h1::after{content:"";display:block;height:4px;width:90px;border-radius:4px;margin-top:4px;background:linear-gradient(90deg,var(--g1),var(--g2),var(--g3))}
+body::before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;background:radial-gradient(circle at 15% 10%,color-mix(in srgb,var(--g2) 22%,transparent),transparent 45%),radial-gradient(circle at 90% 85%,color-mix(in srgb,var(--g3) 20%,transparent),transparent 45%)}
+.total{background:linear-gradient(120deg,var(--g1),var(--g2),var(--g3),var(--g1));background-size:300% 300%;animation:mg 10s ease infinite;color:#fff;box-shadow:0 8px 24px -10px var(--g2)}
+@keyframes mg{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
+.btn{background:linear-gradient(120deg,var(--g1),var(--g2));color:#fff}
+.skins{display:flex;gap:8px;margin:0 0 12px}
+.skins button{width:28px;height:28px;border-radius:50%;border:2px solid var(--card);box-shadow:0 0 0 1px var(--line);cursor:pointer;padding:0}
+.skins button.on{box-shadow:0 0 0 2px var(--ink)}
+.live{border:2px solid transparent;background:linear-gradient(var(--card),var(--card)) padding-box,linear-gradient(120deg,var(--g1),var(--g2),var(--g3)) border-box}
+.live .meta{color:var(--mut);font-size:.88rem;margin:4px 0 10px}
+.clk{font-size:2.4rem;font-weight:700;font-variant-numeric:tabular-nums;line-height:1.2}
+#alarm{position:fixed;top:calc(8px + env(safe-area-inset-top,0px));inset-inline:10px;z-index:60;background:#b3341f;color:#fff;border-radius:12px;padding:12px 14px;display:none;align-items:center;justify-content:space-between;gap:10px;font-weight:700;animation:fl .8s ease-in-out infinite alternate}
+#alarm.on{display:flex}
+@keyframes fl{to{opacity:.75}}
+#pv{display:none;position:fixed;inset:0;z-index:70;background:#fff;color:#12302f;overflow:auto;padding-top:env(safe-area-inset-top,0px)}
+#pv.on{display:block}
+.pvbar{position:sticky;top:0;display:flex;gap:8px;flex-wrap:wrap;padding:10px;background:#f5f8f7;border-bottom:1px solid #cddad7}
+#pv .btn.ghost{color:#0f5a57;border-color:#0f5a57}
+.pvbody{max-width:794px;margin:0 auto}
+@media (prefers-reduced-motion:reduce){.total,#alarm{animation:none}}
+@media print{.wrap,.save,#alarm{display:none!important}#pv{position:static;overflow:visible;padding:0}.pvbar{display:none}body::before{display:none}*{-webkit-print-color-adjust:exact;print-color-adjust:exact}tr{break-inside:avoid}@page{size:A4;margin:10mm}}
+
+:root[data-skin="luxury"]{--pri:#14213d;--priT:#fff;--g1:#101a30;--g2:#8b6a26;--g3:#d8b45a}
+@media (prefers-color-scheme:light){:root[data-skin="luxury"]:not([data-theme="dark"]){--bg:#f7f7fa;--grid:#e8e6df;--line:#ded9ca}}
+:root[data-skin="luxury"][data-theme="light"]{--bg:#f7f7fa;--grid:#e8e6df;--line:#ded9ca}
+@media (prefers-color-scheme:dark){:root[data-skin="luxury"]:not([data-theme="light"]){--pri:#d8b45a;--priT:#101a30}}
+:root[data-skin="luxury"][data-theme="dark"]{--pri:#d8b45a;--priT:#101a30}
+:root[data-skin="luxury"] .box,:root[data-skin="luxury"] .stat,:root[data-skin="luxury"] .sess{box-shadow:0 5px 18px rgba(20,33,61,.055)}
+:root[data-skin="luxury"] h1::after{height:4px;width:140px}
+nav{overflow-x:auto;scrollbar-width:thin}
+nav button{min-width:74px;white-space:nowrap}
+.btn:active,nav button:active{transform:translateY(1px)}
+input,select,textarea,button{touch-action:manipulation}
+input,select,textarea{min-height:42px}
+textarea{resize:vertical}
+.modalShade{position:fixed;inset:0;z-index:100;background:rgba(8,15,30,.65);display:flex;align-items:center;justify-content:center;padding:16px}
+.modal{width:min(620px,100%);max-height:90dvh;overflow:auto;background:var(--card);color:var(--ink);border:1px solid var(--line);border-radius:16px;padding:18px;box-shadow:0 24px 70px #0003}
+.modal h2{margin:0 0 12px}
+.chartBars{display:flex;align-items:flex-end;gap:8px;height:160px;padding:14px 4px 0;border-bottom:1px solid var(--line)}
+.chartBar{flex:1;min-width:18px;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;gap:5px}
+.chartBar i{display:block;width:min(34px,80%);min-height:2px;border-radius:6px 6px 0 0;background:linear-gradient(180deg,#d8b45a,#8b6a26)}
+.chartBar small{font-size:.7rem;color:var(--mut);text-align:center}
+.chartBar b{font-size:.7rem;font-weight:500}
+.kpiGrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+@media(min-width:600px){.kpiGrid{grid-template-columns:repeat(4,minmax(0,1fr))}}
+@media(max-width:520px){.wrap{padding:10px 9px 55px}h1{font-size:1.3rem}.box{padding:11px}.total .big{font-size:1.65rem}.row{grid-template-columns:repeat(auto-fit,minmax(130px,1fr))}.sess .acts>div{width:calc(50% - 8px)}}
+@media print{.modalShade{display:none!important}}
+input[type="month"],input[type="date"],input[type="time"]{display:block;width:100%;min-width:0;max-width:100%;height:auto;-webkit-appearance:none;appearance:none}
+.row>div{min-width:0}
+.pk input{width:auto}
+.btn{position:relative;overflow:hidden;isolation:isolate;background:linear-gradient(120deg,var(--g1),var(--g2),var(--g3),var(--g1))!important;background-size:250% 250%!important;animation:btnFlow 6s ease infinite;color:#fff!important;border:0!important;border-radius:12px!important;box-shadow:0 6px 18px -6px var(--g2),inset 0 1px 0 rgba(255,255,255,.35)!important;transition:transform .2s ease,box-shadow .3s ease,filter .2s ease;text-shadow:0 1px 2px rgba(0,0,0,.25)}
+.btn::before{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(105deg,transparent 30%,rgba(255,255,255,.6) 50%,transparent 70%);transform:translateX(-120%);transition:transform .7s ease}
+.btn::after{content:"\2728";position:absolute;top:-6px;inset-inline-end:6px;font-size:.7rem;opacity:0;transform:scale(.4) rotate(-20deg);transition:opacity .3s,transform .4s;pointer-events:none}
+.btn:hover{transform:translateY(-2px) scale(1.03);box-shadow:0 12px 26px -6px var(--g2),0 0 20px -2px var(--g3)!important;filter:saturate(1.25) brightness(1.06)}
+.btn:hover::before{transform:translateX(120%)}
+.btn:hover::after{opacity:1;transform:scale(1) rotate(0)}
+.btn:active{transform:scale(.95);filter:brightness(.95)}
+.btn.ghost{background:color-mix(in srgb,var(--card) 85%,transparent)!important;color:var(--pri)!important;box-shadow:inset 0 0 0 1.5px var(--pri),0 4px 14px -8px var(--g2)!important;text-shadow:none}
+.btn.ghost:hover{background:linear-gradient(120deg,color-mix(in srgb,var(--g1) 18%,transparent),color-mix(in srgb,var(--g3) 18%,transparent))!important;box-shadow:inset 0 0 0 1.5px var(--pri),0 0 18px -4px var(--g3)!important}
+.btn.del{background:linear-gradient(120deg,#b3341f,#e11d48,#f97316,#b3341f)!important;background-size:250% 250%!important;box-shadow:0 6px 18px -6px #e11d48!important}
+.btn.sm{padding:6px 12px!important;font-size:.82rem!important}
+nav button.on{text-shadow:0 0 14px var(--g2)}
+nav button.on::after{content:"";display:block;height:3px;margin-top:-3px;border-radius:3px;background:linear-gradient(90deg,var(--g1),var(--g2),var(--g3));box-shadow:0 0 10px var(--g2)}
+@keyframes btnFlow{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
+@media (prefers-reduced-motion:reduce){.btn{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>سجل الدروس الخصوصية</h1>
+  <p class="sub">الحصص، الحضور، التفاعل، والدفعات بالدينار الكويتي</p>
+  <div class="skins" id="skins" title="ألوان التطبيق"></div>
+  <button id="themeT" class="btn ghost sm" type="button" style="margin:0 0 12px"></button>
+  <div id="top"></div><p class="sub" id="cloudStatus" style="margin:6px 0">حالة البيانات: محفوظة محليًا</p>
+  <nav>
+    <button data-t="sessions" class="on">الحصص</button>
+    <button data-t="students">الطلاب</button>
+    <button data-t="report">التقارير</button><button data-t="finance">المالية</button><button data-t="schedule">المواعيد</button><button data-t="progress">المستوى</button>
+  </nav>
+  <main id="main"></main>
+  <div class="box"><h2>النسخة الاحتياطية</h2><div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn ghost sm" id="bkB">تنزيل نسخة احتياطية</button><label class="btn ghost sm" style="margin:0;cursor:pointer;color:var(--pri)">استعادة من ملف<input type="file" id="bkR" accept=".json,application/json" hidden></label></div><textarea id="bkT" rows="3" hidden style="margin-top:8px"></textarea><p class="sub" id="bkM" style="margin:8px 0 0"></p><p class="sub" id="syncM">حالة المزامنة: محلي على هذا المتصفح</p><button class="btn ghost sm" id="syncNow" type="button">مزامنة الآن</button></div>
+</div>
+<div class="save" id="save">تم الحفظ</div><div id="modalRoot"></div>
+<div id="alarm"><span id="alarmT"></span><button class="btn sm" id="alarmOk" style="background:#fff;color:#b3341f">تم</button></div>
+<script>
+const $=s=>document.querySelector(s);
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const kd=n=>(Math.round((+n||0)*1000)/1000).toFixed(3)+' د.ك';
+const today=()=>{const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')};
+let S={students:[],sessions:[],payments:[],appointments:[],expenses:[],progress:[],parents:[]},tab='sessions',fStu='',fMonth='',docRef=null,cloudState='محلي';
+const LS='tutor-manager-v1';
+const clean=()=>{const c=JSON.parse(JSON.stringify(S));c.sessions=(c.sessions||[]).map(({_adv,...r})=>r);return c};
+
+/* ---- storage: private db if available, else browser storage ---- */
+async function init(){
+  try{const raw=localStorage.getItem(LS);if(raw)S=JSON.parse(raw)}catch(e){};S=Object.assign({students:[],sessions:[],payments:[],appointments:[],expenses:[],progress:[],parents:[]},S);if(!S.appVersion){S.skin='luxury';S.appVersion=2;}['students','sessions','payments','appointments','expenses','progress','parents'].forEach(k=>{if(!Array.isArray(S[k]))S[k]=[]});
+  draw();
+  try{
+    const [db,user]=await Promise.all([claude.use('db'),claude.use('user')]);
+    if(db&&user){
+      const id=await user.id();
+      if(id){
+        docRef=db.collection('data/users/'+id).doc('tutor');
+        const snap=await docRef.get();
+        if(snap.exists){const local=S,remote=snap.data()||{};if(local.rev&&remote.rev){S=Object.assign({students:[],sessions:[],payments:[],appointments:[],expenses:[],progress:[],parents:[]},remote.rev>=local.rev?remote:local);['students','sessions','payments','appointments','expenses','progress','parents'].forEach(k=>{if(!Array.isArray(S[k]))S[k]=[]});try{localStorage.setItem(LS,JSON.stringify(clean()))}catch(e){}await docRef.set(clean());cloudState='متصل';draw();return}S=Object.assign({students:[],sessions:[],payments:[],appointments:[],expenses:[],progress:[],parents:[]},remote);['students','sessions','payments','appointments','expenses','progress','parents'].forEach(k=>{const merged=new Map((Array.isArray(S[k])?S[k]:[]).map(x=>[x.id,x]));(Array.isArray(local[k])?local[k]:[]).forEach(x=>merged.set(x.id,x));S[k]=[...merged.values()]});if(local.teacher&&!S.teacher)S.teacher=local.teacher;if(local.skin)S.skin=local.skin;S.rev=Date.now();try{localStorage.setItem(LS,JSON.stringify(clean()))}catch(e){}await docRef.set(clean());cloudState='متصل';draw()}
+        else if(S.students.length||S.sessions.length||S.appointments.length||S.expenses.length){S.rev=Date.now();await docRef.set(clean());cloudState='تم رفع البيانات'}else cloudState='متصل';
+      }
+    }
+  }catch(e){cloudState='محلي فقط'}
+}
+async function save(){
+  S.rev=Date.now();
+  try{localStorage.setItem(LS,JSON.stringify(clean()))}catch(e){}
+  try{if(docRef){await docRef.set(clean());cloudState='متصل'}}catch(e){cloudState='تعذر التزامن'}
+  const el=$('#save');el.classList.add('on');setTimeout(()=>el.classList.remove('on'),1200);
+}
+
+/* ---- helpers ---- */
+const stu=id=>S.students.find(s=>s.id===id)||{name:'(طالب محذوف)',rate:0};
+const pkey=p=>{let d=String(p||'').replace(/\D/g,'').replace(/^00/,'');if(d.length>8&&d.startsWith('965'))d=d.slice(3);return d};
+const parentOf=t=>t&&t.pid?(S.parents||[]).find(x=>x.id===t.pid):null;
+const fk=sid=>{const t=S.students.find(x=>x.id===sid);if(!t)return 'S'+sid;const pr=parentOf(t),k=pkey(pr?pr.phone:t.phone);return k||('S'+sid)};
+const badName=n=>/^[\d\s+\-()]*$/.test(String(n||''));
+const nm=s=>badName(s.name)?'⚠ بدون اسم — اضغط «تعديل بيانات الطالب»':s.name;
+function parentsHTML(){
+ const P=S.parents||[];
+ const form=`<div class="box"><h2>تسجيل ولي أمر</h2><div class="row"><div><label>اسم ولي الأمر</label><input id="pa_name" autocomplete="off"></div><div><label>هاتف ولي الأمر</label><input id="pa_phone" inputmode="tel" autocomplete="off"></div></div><div style="margin-top:10px"><button class="btn" id="addPa">إضافة ولي الأمر</button> <span id="paErr" style="color:var(--bad);font-size:.88rem"></span></div><p class="sub" style="margin:8px 0 0">الطلاب الذين يحملون نفس الهاتف يُربطون به تلقائيًا، ودفعاته تغطي حصص جميع أبنائه.</p></div>`;
+ const cards=P.map(pr=>{const k=pkey(pr.phone),kids=S.students.filter(t=>fk(t.id)===k);let D=0,Pd=0,R=0;
+  const rows=kids.map(x=>{const ss=S.sessions.filter(y=>y.sid===x.id),d=sum(ss,y=>y.due),pd=sum(ss,eff),r=Math.max(0,d-pd);D+=d;Pd+=pd;R+=r;return `<div class="meta n" style="margin:0">• ${esc(nm(x))}: ${r>0.0005?'عليه '+kd(r):'لا متبقي'}</div>`}).join('')||'<div class="meta">لا يوجد أبناء مرتبطون بعد.</div>';
+  const bal=credit[k]||0,pays=S.payments.filter(y=>y.pid===pr.id);
+  return `<div class="sess"><div class="top"><b>👤 ${esc(pr.name)}</b><span class="chip ${R>0.0005?'bad':'ok'}">${R>0.0005?'المستحق عليه '+kd(R):bal>0?'رصيد مقدم '+kd(bal):'لا متبقي'}</span></div><div class="meta"><bdi>${esc(pr.phone)}</bdi> • ${kids.length} من الأبناء</div>
+  <div class="stats" style="margin:6px 0"><div class="stat"><span>المستحق</span><b class="n">${kd(D)}</b></div><div class="stat"><span>المدفوع</span><b class="n">${kd(Pd)}</b></div><div class="stat"><span>المتبقي على ولي الأمر</span><b class="n">${kd(R)}</b></div><div class="stat"><span>رصيد مقدم</span><b class="n">${kd(bal)}</b></div></div>${rows}
+  <div class="acts" style="margin:6px 0"><div><label>دفعة ولي الأمر (د.ك)</label><input type="number" step="0.001" min="0" id="pa_adv_${pr.id}"></div><button class="btn sm" data-padv="${pr.id}">إضافة دفعة</button></div>
+  ${pays.map(y=>`<div class="acts n" style="margin:6px 0"><div><label>تاريخ الدفعة</label><input type="date" id="pd_${y.id}" value="${y.date||''}"></div><div><label>المبلغ (د.ك)</label><input type="number" step="0.001" min="0" id="pa_${y.id}" value="${+y.amount||0}"></div><button class="btn sm" data-saveP="${y.id}" type="button">حفظ</button><button class="btn sm del" data-delP="${y.id}">حذف</button></div>`).join('')}
+  <button class="btn sm ghost" data-editPa="${pr.id}">تعديل</button> <button class="btn sm del" data-delPa="${pr.id}">حذف ولي الأمر</button></div>`}).join('');
+ return form+cards}
+function famBox(s){const k=pkey(s.phone);if(!k)return'';const sib=S.students.filter(x=>pkey(x.phone)===k);if(sib.length<2)return'';
+ let D=0,P=0,R=0,B=credit[k]||0;
+ const rows=sib.map(x=>{const ss=S.sessions.filter(y=>y.sid===x.id),d=sum(ss,y=>y.due),pd=sum(ss,eff),r=Math.max(0,d-pd);D+=d;P+=pd;R+=r;return `<div class="meta n" style="margin:0">• ${esc(nm(x))}: ${r>0.0005?'عليه '+kd(r):'لا متبقي'}</div>`}).join('');
+ return `<div style="border:1px dashed var(--line);border-radius:8px;padding:8px 10px;margin:6px 0"><b>إجمالي ولي الأمر</b> <span class="meta n" style="margin:0">(<bdi>${esc(s.phone)}</bdi> • ${sib.length} طلاب)</span><div class="stats" style="margin:6px 0"><div class="stat"><span>المستحق</span><b class="n">${kd(D)}</b></div><div class="stat"><span>المدفوع</span><b class="n">${kd(P)}</b></div><div class="stat"><span>المتبقي</span><b class="n">${kd(R)}</b></div><div class="stat"><span>رصيد مقدم</span><b class="n">${kd(B)}</b></div></div>${rows}</div>`}
+const mins=(a,b)=>{if(!a||!b)return 0;const[x,y]=a.split(':').map(Number),[p,q]=b.split(':').map(Number);let d=(p*60+q)-(x*60+y);if(d<0)d+=1440;return d};
+const dur=m=>m?(m>=60?Math.floor(m/60)+' س ':'')+(m%60?m%60+' د':''):'';
+const dayN=d=>{try{return new Date(d+'T00:00:00').toLocaleDateString('ar',{weekday:'long'})}catch(e){return ''}};
+const stars=n=>n?'<span class="stars" title="التفاعل">'+'★'.repeat(n)+'☆'.repeat(5-n)+'</span>':'<span class="chip warn">بلا تقييم</span>';
+const status=s=>{const d=+s.due||0,p=eff(s);if(d<=0&&p<=0)return['<span class="chip warn">لا مستحقات</span>','warn'];if(p>=d)return['<span class="chip ok">مدفوع</span>','ok'];if(p>0)return['<span class="chip warn">جزئي</span>','warn'];return['<span class="chip bad">غير مدفوع</span>','bad']};
+const sum=(a,f)=>a.reduce((t,x)=>t+(+f(x)||0),0);
+const eff=s=>(+s.paid||0)+(s._adv||0);
+let credit={};
+function alloc(){credit={};if(!Array.isArray(S.parents))S.parents=[];S.students.forEach(t=>{const k=fk(t.id);credit[k]=(credit[k]||0)+sum(S.payments.filter(p=>p.sid===t.id),p=>p.amount)});S.parents.forEach(pr=>{const k=pkey(pr.phone);if(k)credit[k]=(credit[k]||0)+sum(S.payments.filter(p=>p.pid===pr.id),p=>p.amount)});
+ [...S.sessions].sort((a,b)=>(a.date+a.start).localeCompare(b.date+b.start)).forEach(s=>{s._adv=0;const need=Math.max(0,(+s.due||0)-(+s.paid||0)),u=Math.min(need,credit[fk(s.sid)]||0);if(u>0){s._adv=u;credit[fk(s.sid)]-=u}})}
+
+function applyTheme(){const m=S.theme||'auto';if(m==='auto')document.documentElement.removeAttribute('data-theme');else document.documentElement.dataset.theme=m;
+ const dark=m==='dark'||(m==='auto'&&window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);$('#themeT').textContent=dark?'☀️ الوضع الفاتح':'🌙 الوضع الداكن';
+ $('#themeT').onclick=()=>{S.theme=dark?'light':'dark';save();applyTheme()}}
+function draw(){
+  alloc();const due=sum(S.sessions,s=>s.due),paid=sum(S.sessions,s=>s.paid)+sum(S.payments,p=>p.amount),rem=sum(S.sessions,s=>Math.max(0,s.due-eff(s))),bal=sum(Object.values(credit),x=>x),att=S.sessions.filter(s=>s.att).length;
+  const cs=$('#cloudStatus');if(cs)cs.textContent='حالة البيانات: '+(cloudState==='متصل'?'مزامنة سحابية متاحة':cloudState==='تعذر التزامن'?'محفوظة محليًا — تعذرت المزامنة':'محفوظة محليًا على هذا المتصفح');
+  $('#top').innerHTML=`<div class="total"><div><small>إجمالي المدفوع</small><span class="big n">${kd(paid)}</span></div><div><small>المتبقي على الطلاب</small><span class="big n">${kd(rem)}</span></div></div>
+  <div class="stats"><div class="stat"><b>${S.students.length}</b><span>طلاب</span></div><div class="stat"><b>${S.sessions.length}</b><span>حصص مسجلة</span></div><div class="stat"><b>${att}</b><span>حصص حضرها الطلاب</span></div><div class="stat"><b class="n">${kd(due)}</b><span>إجمالي المستحق</span></div><div class="stat"><b class="n">${kd(bal)}</b><span>أرصدة مقدمة</span></div></div>`;
+  document.documentElement.dataset.skin=S.skin||'luxury';applyTheme();
+  $('#skins').innerHTML=[['luxury','#14213d','#d8b45a'],['teal','#0f5a57','#1b8f9a'],['magic','#7c3aed','#e11d48'],['sunset','#e11d48','#d97706'],['ocean','#0369a1','#0891b2'],['aurora','#047857','#6d28d9']].map(k=>`<button data-skin="${k[0]}" class="${(S.skin||'luxury')===k[0]?'on':''}" style="background:linear-gradient(135deg,${k[1]},${k[2]})" aria-label="${k[0]}"></button>`).join('');
+  document.querySelectorAll('#skins button').forEach(b=>b.onclick=()=>{S.skin=b.dataset.skin;save();draw()});
+  document.querySelectorAll('nav button').forEach(b=>b.classList.toggle('on',b.dataset.t===tab));
+  ({sessions:drawSessions,students:drawStudents,report:drawReport,finance:drawFinance,schedule:drawSchedule,progress:drawProgress})[tab]();
+}
+document.querySelectorAll('nav button').forEach(b=>b.onclick=()=>{tab=b.dataset.t;draw()});
+
+/* ---- sessions ---- */
+function drawSessions(){
+  if(!S.students.length){$('#main').innerHTML='<div class="box empty">أضف طالبًا أولًا من تبويب «الطلاب» ثم سجّل حصصه هنا.</div>';return}
+  const opts=S.students.map(s=>`<option value="${s.id}">${esc(nm(s))}</option>`).join('');
+  const list=[...S.sessions].sort((a,b)=>(b.date+b.start).localeCompare(a.date+a.start));
+  $('#main').innerHTML=`<div class="box live" id="liveBox">${liveHTML()}</div>
+  <div class="box"><h2>تسجيل حصة</h2>
+  <div class="row">
+   <div><label>الطالب</label><select id="f_stu">${opts}</select></div>
+   <div><label>التاريخ</label><input type="date" id="f_date" value="${today()}"></div>
+   <div><label>بداية الحصة</label><input type="time" id="f_start"></div>
+   <div><label>نهاية الحصة</label><input type="time" id="f_end"></div>
+   <div><label>الحضور</label><select id="f_att"><option value="1">حضر</option><option value="0">غاب</option></select></div>
+   <div><label>التفاعل في الحصة</label><select id="f_eng"><option value="5">5 - ممتاز</option><option value="4">4 - جيد جدًا</option><option value="3" selected>3 - متوسط</option><option value="2">2 - ضعيف</option><option value="1">1 - ضعيف جدًا</option></select></div>
+   <div><label>المستحق (د.ك)</label><input type="number" step="0.001" min="0" id="f_due"></div>
+   <div><label>المدفوع الآن (د.ك)</label><input type="number" step="0.001" min="0" id="f_paid" value="0"></div>
+  </div>
+  <div style="margin-top:10px"><label>ملاحظات (الدرس، الواجب، نقاط الضعف)</label><textarea id="f_note" rows="2"></textarea></div>
+  <div style="margin-top:10px"><button class="btn" id="addS">حفظ الحصة</button> <span id="err" style="color:var(--bad);font-size:.88rem"></span></div></div>
+  ${viewBox()}<div class="bar"><b>آخر الحصص</b></div>
+  ${viewSel.length?viewList():(list.length?list.map(sessCard).join(''):'<div class="box empty">لا توجد حصص بعد.</div>')}`;
+  const fill=()=>{const s=stu($('#f_stu').value),course=s.kind==='course';$('#f_due').value=(!course&&$('#f_att').value==='1')?s.rate:0;$('#f_due').readOnly=course};
+  $('#f_stu').onchange=fill;$('#f_att').onchange=fill;fill();bindLive();
+  if(prefill){const p=prefill;prefill=null;$('#f_stu').value=p.sid;$('#f_date').value=p.date;$('#f_start').value=p.start;$('#f_end').value=p.end;fill();$('#f_att').scrollIntoView({block:'center'})}
+  $('#addS').onclick=addSession;
+  bindView();
+  document.querySelectorAll('[data-pay]').forEach(b=>b.onclick=()=>{const s=S.sessions.find(x=>x.id===b.dataset.pay);s.paid=(+s.paid||0)+Math.max(0,(+s.due||0)-eff(s));save();draw()});
+  document.querySelectorAll('[data-paid]').forEach(i=>i.onchange=()=>{const s=S.sessions.find(x=>x.id===i.dataset.paid);s.paid=Math.max(0,+i.value||0);save();draw()});
+  document.querySelectorAll('[data-delS]').forEach(b=>b.onclick=()=>{if(b.dataset.sure){S.sessions=S.sessions.filter(x=>x.id!==b.dataset.dels);save();draw()}else{b.dataset.sure=1;b.textContent='تأكيد الحذف'}});
+  document.querySelectorAll('[data-editsession]').forEach(b=>b.onclick=()=>editSession(b.dataset.editsession));
+}
+let viewSel=[],editId=null;
+function viewBox(){viewSel=viewSel.filter(id=>S.students.some(s=>s.id===id));
+ return `<div class="box"><h2>عرض حصص الطلاب</h2><p class="sub" style="margin:0 0 10px">اختر طالبًا أو أكثر لعرض كل حصصه وتعديلها.</p><select id="vSel" multiple size="5" style="width:100%;min-width:0">${S.students.map(s=>`<option value="${s.id}" ${viewSel.includes(s.id)?'selected':''}>${esc(nm(s))}</option>`).join('')}</select></div>`}
+function viewList(){return S.students.filter(s=>viewSel.includes(s.id)).map(s=>{const L=S.sessions.filter(x=>x.sid===s.id).sort((a,b)=>(b.date+b.start).localeCompare(a.date+a.start));
+ return `<div class="bar" style="margin-top:6px"><b>${esc(nm(s))}</b><span class="meta">${L.length} حصة</span></div>`+(L.length?L.map(x=>x.id===editId?editorHTML(x):sessCard(x)+`<div style="margin:-6px 0 12px"><button class="btn sm" data-edit="${x.id}">✏️ تعديل الحصة</button></div>`).join(''):'<div class="box empty">لا توجد حصص لهذا الطالب.</div>')}).join('')}
+function editorHTML(s){const eo=[5,4,3,2,1].map(n=>`<option value="${n}" ${+s.eng===n?'selected':''}>${n}</option>`).join('');
+ return `<div class="sess" style="border-inline-start-color:var(--warn)"><div class="row"><div><label>التاريخ</label><input type="date" id="e_date" value="${s.date}"></div><div><label>بداية الحصة</label><input type="time" id="e_start" value="${s.start||''}"></div><div><label>نهاية الحصة</label><input type="time" id="e_end" value="${s.end||''}"></div><div><label>الحضور</label><select id="e_att"><option value="1" ${s.att?'selected':''}>حضر</option><option value="0" ${!s.att?'selected':''}>غاب</option></select></div><div><label>التفاعل</label><select id="e_eng">${eo}</select></div><div><label>المستحق (د.ك)</label><input type="number" step="0.001" min="0" id="e_due" value="${+s.due||0}"></div><div><label>المدفوع (د.ك)</label><input type="number" step="0.001" min="0" id="e_paid" value="${+s.paid||0}"></div></div><div style="margin-top:8px"><label>ملاحظات</label><textarea id="e_note" rows="2">${esc(s.note||'')}</textarea></div><div style="display:flex;gap:8px;margin-top:10px"><button class="btn sm" data-save="${s.id}" type="button">حفظ التعديل</button><button class="btn sm ghost" data-cancel type="button">إلغاء</button></div></div>`}
+function bindView(){const v=$('#vSel');if(v)v.onchange=()=>{viewSel=[...v.selectedOptions].map(o=>o.value);editId=null;draw()};
+ document.querySelectorAll('[data-edit]').forEach(b=>b.onclick=()=>{editId=b.dataset.edit;draw()});
+ document.querySelectorAll('[data-cancel]').forEach(b=>b.onclick=()=>{editId=null;draw()});
+ document.querySelectorAll('[data-save]').forEach(b=>b.onclick=()=>{const s=S.sessions.find(x=>x.id===b.dataset.save);if(!s)return;const g=i=>$('#'+i).value;if(!g('e_start')||!g('e_end'))return;
+  Object.assign(s,{date:g('e_date')||s.date,start:g('e_start'),end:g('e_end'),att:g('e_att')==='1',eng:g('e_att')==='1'?(+g('e_eng')||0):0,due:+g('e_due')||0,paid:+g('e_paid')||0,note:g('e_note').trim()});
+  editId=null;save();draw()})}
+function sessCard(s){
+  const st=stu(s.sid),[chip]=status(s),m=mins(s.start,s.end),rem=Math.max(0,(+s.due||0)-eff(s));
+  return `<div class="sess ${s.att?'':'absent'}"><div class="top"><b>${esc(nm(st))}</b><span>${s.att?'<span class="chip ok">حضر</span>':'<span class="chip bad">غاب</span>'} ${chip}</span></div>
+  <div class="meta n">${s.date} • ${s.start||'--'} إلى ${s.end||'--'} ${m?'('+dur(m)+')':''}${s.att?' • التفاعل: '+stars(s.eng):''}</div>
+  ${s.note?`<div class="meta">${esc(s.note)}</div>`:''}
+  <div class="acts n"><div><label>المستحق</label><b>${kd(s.due)}</b></div><div><label>المتبقي</label><b>${kd(rem)}</b></div>${s._adv?`<div><label>من الرصيد المقدم</label><b>${kd(s._adv)}</b></div>`:''}
+  <div><label>المدفوع</label><input type="number" step="0.001" min="0" value="${+s.paid||0}" data-paid="${s.id}"></div>
+  ${rem>0?`<button class="btn sm" data-pay="${s.id}">دفع كامل</button>`:''}<button class="btn sm ghost" data-editsession="${s.id}">تعديل</button><button class="btn sm del" data-dels="${s.id}" data-delS>حذف</button></div></div>`;
+}
+function addSession(){
+  const v=i=>$('#'+i).value,att=v('f_att')==='1',due=Number(v('f_due')||0),paid=Number(v('f_paid')||0);
+  if(!v('f_date')||!v('f_start')||!v('f_end')){$('#err').textContent='أدخل التاريخ ووقت البداية والنهاية.';return}
+  if(!Number.isFinite(due)||!Number.isFinite(paid)||due<0||paid<0){$('#err').textContent='المبالغ يجب أن تكون أرقامًا صحيحة غير سالبة.';return}
+  S.sessions.push({id:'s'+Date.now(),sid:v('f_stu'),date:v('f_date'),start:v('f_start'),end:v('f_end'),att,eng:att?+v('f_eng'):0,due,paid,note:v('f_note').trim()});
+  save();draw();
+}
+
+/* ---- students ---- */
+function drawStudents(){
+  $('#main').innerHTML=`<div class="box"><h2>إضافة طالب</h2><div class="row">
+  <div><label>اسم الطالب</label><input id="n_name" autocomplete="off" name="student_name"></div>
+  <div><label>الصف</label><input id="n_grade"></div>
+  <div><label>هاتف ولي الأمر</label><input id="n_phone" inputmode="tel" autocomplete="off" name="parent_phone"><button class="btn ghost sm" id="pickC" type="button" style="margin-top:6px">اختيار من جهات الاتصال</button><small id="pickH" style="color:var(--mut)"></small></div>
+  <div><label>ولي الأمر (اختياري)</label><select id="n_pid"><option value="">— بدون —</option>${(S.parents||[]).map(x=>`<option value="${x.id}">${esc(x.name)}</option>`).join('')}</select></div>
+  <div><label>نوع الاشتراك</label><select id="n_kind"><option value="lesson">حصص</option><option value="course">كورس</option></select></div>
+  <div><label>سعر الحصة (د.ك)</label><input id="n_rate" type="number" step="0.001" min="0" value="5.000"></div></div>
+  <div style="margin-top:10px"><button class="btn" id="addN">إضافة الطالب</button> <span id="err" style="color:var(--bad);font-size:.88rem"></span></div></div>
+  <div class="box"><h2>إرسال تقارير أولياء الأمور</h2><div class="row"><div><label>اسم المعلم (يظهر في التقرير)</label><input id="rp_t" value="${esc(S.teacher||'')}"></div><div><label>فترة التقرير (فارغة = كل الحصص)</label><input type="month" id="rp_m" value="${fMonth}"></div></div><p class="sub" id="rpMsg" style="margin:8px 0 0">اضغط «طباعة» أو «إرسال واتساب» في بطاقة أي طالب.</p><textarea id="rpT" rows="6" hidden style="margin-top:8px"></textarea></div>
+  ${parentsHTML()}
+  ${S.students.length?S.students.map(s=>{const ss=S.sessions.filter(x=>x.sid===s.id),d=sum(ss,x=>x.due),p=sum(ss,eff),bal=credit[fk(s.id)]||0,pays=S.payments.filter(y=>y.sid===s.id);
+   return `<div class="sess"><div class="top"><b>${esc(nm(s))}</b><span class="chip ${d-p>0.0005?'bad':'ok'}">${d-p>0.0005?'عليه '+kd(d-p):bal>0?'رصيد مقدم '+kd(bal):'لا متبقي'}</span></div>
+   <div class="meta">${esc(s.grade||'')} ${s.phone?'• <bdi>'+esc(s.phone)+'</bdi>':''}${parentOf(s)?' • ولي الأمر: '+esc(parentOf(s).name):''} • ${s.kind==='course'?'كورس (بدون مستحق على الحصة)':'سعر الحصة '+kd(s.rate)} • ${ss.length} حصة</div>
+   ${famBox(s)}
+   <div style="display:flex;gap:8px;flex-wrap:wrap;margin:6px 0"><button class="btn sm" data-print="${s.id}">طباعة تفاصيل الحصص</button><button class="btn sm" data-wa="${s.id}">إرسال واتساب</button></div><div class="acts" style="margin:6px 0"><div><label>دفعة مقدمة (د.ك)</label><input type="number" step="0.001" min="0" id="a_${s.id}"></div><button class="btn sm" data-adv="${s.id}">إضافة دفعة مقدمة</button></div>${pays.map(y=>`<div class="acts n" style="margin:6px 0"><div><label>تاريخ الدفعة</label><input type="date" id="pd_${y.id}" value="${y.date||''}"></div><div><label>المبلغ (د.ك)</label><input type="number" step="0.001" min="0" id="pa_${y.id}" value="${+y.amount||0}"></div><button class="btn sm" data-saveP="${y.id}" type="button">حفظ</button><button class="btn sm del" data-delP="${y.id}">حذف</button></div>`).join('')}<button class="btn sm ghost" data-editN="${s.id}">تعديل بيانات الطالب</button> <button class="btn sm del" data-delN="${s.id}">حذف الطالب وحصصه</button></div>`}).join(''):'<div class="box empty">لا يوجد طلاب بعد.</div>'}`;
+  $('#rp_t').onchange=e=>{S.teacher=e.target.value.trim();save()};
+  $('#rp_m').onchange=e=>{fMonth=e.target.value};
+  document.querySelectorAll('[data-print]').forEach(b=>b.onclick=()=>printReport(b.dataset.print));
+  document.querySelectorAll('[data-wa]').forEach(b=>b.onclick=()=>sendWA(b.dataset.wa));
+  const pc=$('#pickC');
+  if(pc){if('contacts' in navigator&&'ContactsManager' in window){pc.onclick=async()=>{try{const r=await navigator.contacts.select(['tel'],{multiple:false});if(r&&r[0]&&r[0].tel&&r[0].tel[0])$('#n_phone').value=r[0].tel[0]}catch(e){$('#pickH').textContent='تعذر فتح جهات الاتصال، الصق الرقم يدويًا.'}}}else{pc.hidden=true;$('#pickH').textContent='على الآيفون: انسخ الرقم من تطبيق جهات الاتصال والصقه هنا.'}}
+  $('#addN').onclick=()=>{const n=$('#n_name').value.trim();if(!n||badName(n)){$('#err').textContent='اكتب اسم الطالب بالحروف (وليس رقم الهاتف).';return}
+    let ph=$('#n_phone').value.trim();const pr=(S.parents||[]).find(x=>x.id===$('#n_pid').value)||(pkey(ph)?(S.parents||[]).find(x=>pkey(x.phone)===pkey(ph)):null);if(pr)ph=pr.phone;
+    S.students.push({id:'t'+Date.now(),name:n,grade:$('#n_grade').value.trim(),phone:ph,pid:pr?pr.id:'',rate:+$('#n_rate').value||0,kind:$('#n_kind').value==='course'?'course':'lesson'});save();draw()};
+  $('#addPa').onclick=()=>{const name=$('#pa_name').value.trim(),phone=$('#pa_phone').value.trim(),k=pkey(phone),er=$('#paErr');
+    if(!name||badName(name)){er.textContent='اكتب اسم ولي الأمر بالحروف.';return}
+    if(k.length<6){er.textContent='اكتب رقم هاتف صحيحًا.';return}
+    if((S.parents||[]).some(x=>pkey(x.phone)===k)){er.textContent='يوجد ولي أمر مسجل بهذا الرقم.';return}
+    const pr={id:'pa'+Date.now(),name,phone};S.parents.push(pr);S.students.forEach(t=>{if(pkey(t.phone)===k)t.pid=pr.id});save();draw()};
+  document.querySelectorAll('[data-padv]').forEach(b=>b.onclick=()=>{const id=b.dataset.padv,v=+$('#pa_adv_'+id).value;if(v>0){S.payments.push({id:'p'+Date.now(),pid:id,date:today(),amount:v});save();draw()}});
+  document.querySelectorAll('[data-delPa]').forEach(b=>b.onclick=()=>{if(b.dataset.sure){const id=b.dataset.delpa;S.parents=S.parents.filter(x=>x.id!==id);S.payments=S.payments.filter(x=>x.pid!==id);S.students.forEach(t=>{if(t.pid===id)t.pid=''});save();draw()}else{b.dataset.sure=1;b.textContent='تأكيد الحذف (تحذف دفعاته)'}});
+  document.querySelectorAll('[data-editPa]').forEach(b=>b.onclick=()=>{const pr=S.parents.find(x=>x.id===b.dataset.editpa);if(!pr)return;
+    modal('تعديل ولي الأمر',`<div class="row"><div><label>الاسم</label><input id="ep_name" value="${esc(pr.name)}"></div><div><label>الهاتف</label><input id="ep_phone" inputmode="tel" value="${esc(pr.phone)}"></div></div><p id="ep_err" style="color:var(--bad);font-size:.88rem"></p><button class="btn" id="ep_save">حفظ</button>`,()=>{
+      $('#ep_save').onclick=()=>{const name=$('#ep_name').value.trim(),phone=$('#ep_phone').value.trim(),k=pkey(phone);
+        if(!name||badName(name)||k.length<6){$('#ep_err').textContent='أدخل اسمًا ورقم هاتف صحيحين.';return}
+        if(S.parents.some(x=>x.id!==pr.id&&pkey(x.phone)===k)){$('#ep_err').textContent='يوجد ولي أمر مسجل بهذا الرقم.';return}
+        pr.name=name;pr.phone=phone;S.students.forEach(t=>{if(t.pid===pr.id)t.phone=phone});save();$('#modalRoot').innerHTML='';draw()}})});
+  document.querySelectorAll('[data-adv]').forEach(b=>b.onclick=()=>{const id=b.dataset.adv,v=+$('#a_'+id).value;if(v>0){S.payments.push({id:'p'+Date.now(),sid:id,date:today(),amount:v});save();draw()}});
+  document.querySelectorAll('[data-delP]').forEach(b=>b.onclick=()=>{if(b.dataset.sure){S.payments=S.payments.filter(y=>y.id!==b.dataset.delp);save();draw()}else{b.dataset.sure=1;b.textContent='تأكيد الحذف'}});
+document.querySelectorAll('[data-saveP]').forEach(b=>b.onclick=()=>{const p=S.payments.find(y=>y.id===b.dataset.savep);if(!p)return;const d=$('#pd_'+p.id).value,a=+$('#pa_'+p.id).value;if(!d||!(a>0))return;p.date=d;p.amount=a;save();draw()});
+  document.querySelectorAll('[data-delN]').forEach(b=>b.onclick=()=>{if(b.dataset.sure){const id=b.dataset.deln;S.students=S.students.filter(x=>x.id!==id);S.sessions=S.sessions.filter(x=>x.sid!==id);S.payments=S.payments.filter(x=>x.sid!==id);S.progress=S.progress.filter(x=>x.sid!==id);S.appointments=S.appointments.filter(x=>x.sid!==id);save();draw()}else{b.dataset.sure=1;b.textContent='تأكيد الحذف'}});
+  document.querySelectorAll('[data-editN]').forEach(b=>b.onclick=()=>editStudent(b.dataset.editn));
+}
+
+/* ---- report ---- */
+function filtered(){return S.sessions.filter(s=>(!fStu||s.sid===fStu)&&(!fMonth||s.date.startsWith(fMonth))).sort((a,b)=>(a.date+a.start).localeCompare(b.date+b.start))}
+let picked=[];
+function groupSummary(){const g={};picked.forEach(id=>{const k=fk(id);(g[k]=g[k]||[]).push(id)});const multi=Object.values(g).filter(x=>x.length>1);if(!multi.length)return '';
+ const C='#0f5a57',c='padding:7px 8px;border-bottom:1px solid #dfe8e5;text-align:center;font-size:13px',th=x=>`<th style="padding:7px 8px;background:${C};color:#fff;font-size:12px;text-align:center">${x}</th>`;
+ return multi.map(ids=>{const st=ids.map(id=>S.students.find(x=>x.id===id)).filter(Boolean),rs=st.map(x=>repData(x)),pr=parentOf(st[0]),sum=k=>rs.reduce((x,r)=>x+(+r[k]||0),0),top='border-top:2px solid #12302f';
+  const rows=st.map((x,i)=>`<tr><td style="${c};text-align:right;font-weight:700">${esc(nm(x))}</td><td style="${c}">${rs[i].n}</td><td style="${c}">${kd(rs[i].due)}</td><td style="${c}">${kd(rs[i].paid)}</td><td style="${c}">${kd(rs[i].rem)}</td></tr>`).join('');
+  return `<div dir="rtl" style="font-family:'IBM Plex Sans Arabic',Tahoma,sans-serif;color:#12302f;border:2px solid ${C};border-radius:10px;padding:12px 16px;margin:0 0 20px"><div style="font-size:15px;font-weight:700;color:${C};margin-bottom:8px">إجمالي ولي الأمر${pr?': '+esc(pr.name):''} (${st.length} طلاب)</div><table style="width:100%;border-collapse:collapse"><thead><tr>${['الطالب','الحصص','إجمالي التكلفة','المدفوع','المتبقي'].map(th).join('')}</tr></thead><tbody>${rows}</tbody><tfoot><tr><td style="${c};font-weight:700;text-align:right;${top}">المجموع</td><td style="${c};font-weight:700;${top}">${sum('n')}</td><td style="${c};font-weight:700;${top}">${kd(sum('due'))}</td><td style="${c};font-weight:700;${top}">${kd(sum('paid'))}</td><td style="${c};font-weight:700;${top}">${kd(sum('rem'))}</td></tr></tfoot></table></div>`}).join('')}
+let pickedPa='';
+function childrenOf(paId){if(!(S.parents||[]).some(p=>p.id===paId))return[];return S.students.filter(s=>{const p=parentOf(s);return p?p.id===paId:false})}
+function pickBox(){
+ const pars=S.parents||[],kids=pickedPa?childrenOf(pickedPa):[];
+ return `<div class="box"><h2>تقارير أولياء الأمور</h2><p class="sub" style="margin:0 0 10px">اختر ولي الأمر، وتُطبع تفاصيل جميع أبنائه في تقرير واحد مع إجمالي التكلفة.</p><select id="pkPa" style="width:100%;min-width:0"><option value="">— اختر ولي الأمر —</option>${pars.map(p=>`<option value="${p.id}" ${p.id===pickedPa?'selected':''}>${esc(p.name)}</option>`).join('')}</select>${pickedPa?`<div style="margin-top:10px;font-size:.9rem;color:var(--mut)">الأبناء: ${kids.length?kids.map(s=>esc(nm(s))).join('، '):'لا يوجد طلاب مرتبطون بهذا الولي'}</div>`:''}<div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px"><button class="btn sm" id="pkPrint" type="button" ${kids.length?'':'disabled'}>طباعة تقارير الأبناء (${kids.length})</button></div>${kids.length?`<div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:10px">${kids.map(x=>`<button class="btn ghost sm" data-waone="${x.id}" type="button">واتساب: ${esc(nm(x))}</button>`).join('')}</div>`:''}</div>`}
+function pickBind(){const sel=$('#pkPa');if(sel)sel.onchange=()=>{pickedPa=sel.value;draw()};
+ const pp=$('#pkPrint');if(pp)pp.onclick=()=>{const kids=childrenOf(pickedPa);if(!kids.length)return;const pr=(S.parents||[]).find(p=>p.id===pickedPa);picked=kids.map(k=>k.id);alloc();printTable('تقرير أبناء: '+(pr?pr.name:'')+(fMonth?' - '+fMonth:''),groupSummary()+kids.map(k=>reportHTML(k)).join('<div style="page-break-after:always"></div>'))};
+ document.querySelectorAll('[data-waone]').forEach(b=>b.onclick=()=>waOne(b.dataset.waone))}
+function waOne(id){const x=S.students.find(y=>y.id===id);if(!x)return;alloc();const d=(x.phone||'').replace(/\D/g,'').replace(/^00/,''),num=d.length===8?'965'+d:d;window.open('https://wa.me/'+num+'?text='+encodeURIComponent(waText(x)),'_blank')}
+function drawReport(){
+  const L=filtered(),due=sum(L,s=>s.due),paid=sum(L,eff),mn=sum(L,s=>s.att?mins(s.start,s.end):0);
+  const per=S.students.map(t=>{const x=L.filter(s=>s.sid===t.id);return{t,n:x.length,a:x.filter(s=>s.att).length,d:sum(x,s=>s.due),p:sum(x,eff)}}).filter(r=>r.n);
+  $('#main').innerHTML=`<div class="box"><div class="row">
+   <div><label>الطالب</label><select id="r_stu"><option value="">كل الطلاب</option>${S.students.map(s=>`<option value="${s.id}" ${s.id===fStu?'selected':''}>${esc(nm(s))}</option>`).join('')}</select></div>
+   <div><label>الشهر</label><input type="month" id="r_m" value="${fMonth}"></div></div></div>
+  ${pickBox()}
+  <div class="total"><div><small>مجموع الدفعات</small><span class="big n">${kd(paid)}</span></div><div><small>المستحق</small><span class="big n">${kd(due)}</span></div><div><small>المتبقي</small><span class="big n">${kd(Math.max(0,due-paid))}</span></div></div>
+  <p class="sub" style="margin-top:8px">${L.length} حصة • حضور ${L.filter(s=>s.att).length} • غياب ${L.filter(s=>!s.att).length} • مدة الحصص الحاضرة ${dur(mn)||'0'} • رصيد مقدم متبقٍ ${kd(fStu?(credit[fk(fStu)]||0):sum(Object.values(credit),x=>x))}</p>
+  ${per.length?`<div class="box"><h2>ملخص لكل طالب</h2><div class="scroll"><table><thead><tr><th>الطالب</th><th>الحصص</th><th>الحضور</th><th>المستحق</th><th>المدفوع</th><th>المتبقي</th></tr></thead><tbody>${per.map(r=>`<tr><td>${esc(r.t.name)}</td><td>${r.n}</td><td>${r.a}</td><td class="n">${kd(r.d)}</td><td class="n">${kd(r.p)}</td><td class="n">${kd(Math.max(0,r.d-r.p))}</td></tr>`).join('')}</tbody></table></div></div>`:''}
+  <div class="box"><div class="bar"><h2 style="margin:0">تفصيل الحصص</h2><div style="display:flex;gap:6px;flex-wrap:wrap"><button class="btn ghost sm" id="reportPrint">طباعة / PDF</button><button class="btn ghost sm" id="csv">تنزيل CSV</button></div></div>
+  ${L.length?`<div class="scroll"><table><thead><tr><th>التاريخ</th><th>اليوم</th><th>الطالب</th><th>بداية الحصة</th><th>نهاية الحصة</th><th>المدة</th><th>الحضور</th><th>التفاعل</th><th>المستحق</th><th>المدفوع</th><th>الحالة</th></tr></thead><tbody>${L.map(s=>`<tr><td class="n">${s.date}</td><td>${dayN(s.date)}</td><td>${esc(stu(s.sid).name)}</td><td class="n">${s.start}</td><td class="n">${s.end}</td><td>${dur(mins(s.start,s.end))||'-'}</td><td>${s.att?'حضر':'غاب'}</td><td>${s.att?stars(s.eng):'-'}</td><td class="n">${kd(s.due)}</td><td class="n">${kd(eff(s))}</td><td>${status(s)[0]}</td></tr>`).join('')}</tbody><tfoot><tr><td colspan="8">المجموع</td><td class="n">${kd(due)}</td><td class="n">${kd(paid)}</td><td></td></tr></tfoot></table></div>`:'<div class="empty">لا توجد حصص ضمن هذا الفلتر.</div>'}</div>`;
+  pickBind();$('#r_stu').onchange=e=>{fStu=e.target.value;draw()};$('#r_m').onchange=e=>{fMonth=e.target.value;draw()};
+  $('#reportPrint').onclick=()=>{const rows=L.map(s=>`<tr><td>${esc(s.date)}</td><td>${esc(dayN(s.date))}</td><td>${esc(stu(s.sid).name)}</td><td>${esc(s.start||'')}</td><td>${esc(s.end||'')}</td><td>${dur(mins(s.start,s.end))}</td><td>${s.att?'حضر':'غاب'}</td><td>${s.att?+s.eng:'-'}</td><td>${kd(s.due)}</td><td>${kd(eff(s))}</td><td>${kd(Math.max(0,(+s.due||0)-eff(s)))}</td></tr>`).join('');printTable('تقرير الحصص',`<p>المستحق: ${kd(due)} • المدفوع: ${kd(paid)} • المتبقي: ${kd(Math.max(0,due-paid))}</p><table><thead><tr><th>التاريخ</th><th>اليوم</th><th>الطالب</th><th>البداية</th><th>النهاية</th><th>المدة</th><th>الحضور</th><th>التفاعل</th><th>المستحق</th><th>المدفوع</th><th>المتبقي</th></tr></thead><tbody>${rows}</tbody></table>`)};
+
+  $('#csv').onclick=async()=>{
+    const q=v=>'"'+String(v).replace(/"/g,'""')+'"';
+    const rows=[['التاريخ','الطالب','البداية','النهاية','الحضور','التفاعل','المستحق KWD','المدفوع KWD','المتبقي KWD','ملاحظات'],...L.map(s=>[s.date,stu(s.sid).name,s.start,s.end,s.att?'حضر':'غاب',s.att?s.eng:'',(+s.due).toFixed(3),eff(s).toFixed(3),Math.max(0,s.due-eff(s)).toFixed(3),s.note||''])];
+    const data='\ufeff'+rows.map(r=>r.map(q).join(',')).join('\n');
+    try{const d=await claude.use('downloads');if(d){await d.save({filename:'tutoring-report.csv',data});return}}catch(e){}downloadBlob(data,'tutoring-report.csv','text/csv;charset=utf-8')
+  };
+}
+
+/* ---- shared helpers and editable records ---- */
+function uid(prefix){return prefix+'-'+Date.now().toString(36)+'-'+Math.random().toString(36).slice(2,7)}
+function downloadBlob(data,name,type='application/octet-stream'){
+ const blob=data instanceof Blob?data:new Blob([data],{type}),url=URL.createObjectURL(blob),a=document.createElement('a');
+ a.href=url;a.download=name;a.style.display='none';document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(url);a.remove()},1200)
+}
+function modal(title,content,onReady){
+ const root=$('#modalRoot');root.innerHTML=`<div class="modalShade" id="modalShade"><section class="modal" role="dialog" aria-modal="true" aria-label="${esc(title)}"><div class="bar"><h2>${esc(title)}</h2><button class="btn ghost sm" id="modalClose">إغلاق</button></div>${content}</section></div>`;
+ $('#modalClose').onclick=()=>root.innerHTML='';
+ $('#modalShade').onclick=e=>{if(e.target.id==='modalShade')root.innerHTML=''};
+ if(onReady)onReady()
+}
+function editStudent(id){
+ const t=S.students.find(x=>x.id===id);if(!t)return;
+ modal('تعديل بيانات الطالب',`<div class="row"><div><label>اسم الطالب</label><input id="e_name" value="${esc(t.name)}"></div><div><label>الصف</label><input id="e_grade" value="${esc(t.grade||'')}"></div><div><label>هاتف ولي الأمر</label><input id="e_phone" inputmode="tel" value="${esc(t.phone||'')}"></div><div><label>سعر الحصة (د.ك)</label><input id="e_rate" type="number" min="0" step=".001" value="${+t.rate||0}"></div></div><p id="e_err" class="sub"></p><button class="btn" id="e_save">حفظ التعديلات</button>`,()=>{
+ $('#e_save').onclick=()=>{const name=$('#e_name').value.trim(),rate=Number($('#e_rate').value);if(!name||badName(name)||!Number.isFinite(rate)||rate<0){$('#e_err').textContent='أدخل اسمًا وسعرًا صحيحًا.';return}Object.assign(t,{name,grade:$('#e_grade').value.trim(),phone:$('#e_phone').value.trim(),rate});{const pr=pkey(t.phone)&&(S.parents||[]).find(x=>pkey(x.phone)===pkey(t.phone));t.pid=pr?pr.id:''}save();$('#modalRoot').innerHTML='';draw()}
+ })
+}
+function editSession(id){
+ const s=S.sessions.find(x=>x.id===id);if(!s)return;
+ const opts=S.students.map(t=>`<option value="${t.id}" ${t.id===s.sid?'selected':''}>${esc(nm(t))}</option>`).join('');
+ modal('تعديل الحصة',`<div class="row"><div><label>الطالب</label><select id="es_sid">${opts}</select></div><div><label>التاريخ</label><input id="es_date" type="date" value="${esc(s.date||today())}"></div><div><label>البداية</label><input id="es_start" type="time" value="${esc(s.start||'')}"></div><div><label>النهاية</label><input id="es_end" type="time" value="${esc(s.end||'')}"></div><div><label>الحضور</label><select id="es_att"><option value="1" ${s.att?'selected':''}>حضر</option><option value="0" ${!s.att?'selected':''}>غاب</option></select></div><div><label>التفاعل</label><select id="es_eng">${[5,4,3,2,1].map(n=>`<option value="${n}" ${+s.eng===n?'selected':''}>${n} من 5</option>`).join('')}</select></div><div><label>المستحق (د.ك)</label><input id="es_due" type="number" min="0" step=".001" value="${+s.due||0}"></div><div><label>المدفوع مباشرة (د.ك)</label><input id="es_paid" type="number" min="0" step=".001" value="${+s.paid||0}"></div></div><div style="margin-top:10px"><label>ملاحظات وواجب وموضوع الدرس</label><textarea id="es_note" rows="3">${esc(s.note||'')}</textarea></div><p id="es_err" class="sub"></p><button class="btn" id="es_save">حفظ التعديلات</button>`,()=>{
+ $('#es_save').onclick=()=>{const due=Number($('#es_due').value),paid=Number($('#es_paid').value),start=$('#es_start').value,end=$('#es_end').value;if(!$('#es_date').value||!start||!end||!Number.isFinite(due)||!Number.isFinite(paid)||due<0||paid<0){$('#es_err').textContent='تحقق من التاريخ والأوقات والمبالغ.';return}Object.assign(s,{sid:$('#es_sid').value,date:$('#es_date').value,start,end,att:$('#es_att').value==='1',eng:$('#es_att').value==='1'?+$('#es_eng').value:0,due,paid,note:$('#es_note').value.trim()});save();$('#modalRoot').innerHTML='';draw()}
+ })
+}
+function drawFinance(){
+ alloc();
+ const income=sum(S.sessions,s=>+s.paid||0)+sum(S.payments,p=>+p.amount||0),credits=sum(Object.values(credit),x=>x),due=sum(S.sessions,s=>+s.due||0),expenses=sum(S.expenses,e=>+e.amount||0),net=income-expenses;
+ const month=today().slice(0,7),mi=sum(S.sessions.filter(s=>s.date&&s.date.startsWith(month)),s=>+s.paid||0)+sum(S.payments.filter(p=>p.date&&p.date.startsWith(month)),p=>+p.amount||0),me=sum(S.expenses.filter(e=>e.date&&e.date.startsWith(month)),e=>+e.amount||0);
+ const months=[];for(let i=5;i>=0;i--){const d=new Date();d.setDate(1);d.setMonth(d.getMonth()-i);const key=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0');months.push({key,label:d.toLocaleDateString('ar',{month:'short'}),income:sum(S.sessions.filter(s=>s.date&&s.date.startsWith(key)),s=>+s.paid||0)+sum(S.payments.filter(p=>p.date&&p.date.startsWith(key)),p=>+p.amount||0),expense:sum(S.expenses.filter(e=>e.date&&e.date.startsWith(key)),e=>+e.amount||0)})}
+ const max=Math.max(1,...months.map(m=>Math.max(m.income,m.expense)));
+ $('#main').innerHTML=`<div class="box"><h2>لوحة الأداء المالي</h2><div class="kpiGrid"><div class="stat"><b class="n">${kd(income)}</b><span>إجمالي التحصيل</span></div><div class="stat"><b class="n">${kd(due)}</b><span>إجمالي المستحق</span></div><div class="stat"><b class="n">${kd(expenses)}</b><span>المصروفات المسجلة</span></div><div class="stat"><b class="n">${kd(net)}</b><span>صافي التحصيل بعد المصروفات</span></div></div><p class="sub">هذا الصافي هو التحصيل المسجل ناقص المصروفات المسجلة، وليس ربحًا محاسبيًا شاملًا. الرصيد المقدم غير المستهلك: ${kd(credits)}.</p></div>
+ <div class="box"><h2>التحصيل والمصروفات — آخر 6 أشهر</h2><div class="chartBars">${months.map(m=>`<div class="chartBar" title="${m.key}"><b>${Math.round(m.income)}</b><i style="height:${Math.max(2,m.income/max*72)}px"></i><i style="height:${Math.max(2,m.expense/max*72)}px;background:linear-gradient(180deg,#e6a49b,#b3341f)"></i><small>${m.label}</small></div>`).join('')}</div><p class="sub">العمود الذهبي: التحصيل • العمود الأحمر: المصروفات (بالدينار الكويتي)</p><div class="stats"><div class="stat"><b class="n">${kd(mi)}</b><span>تحصيل هذا الشهر</span></div><div class="stat"><b class="n">${kd(me)}</b><span>مصروفات هذا الشهر</span></div></div></div>
+ <div class="box"><h2>تسجيل مصروف</h2><div class="row"><div><label>التاريخ</label><input id="ex_date" type="date" value="${today()}"></div><div><label>البند</label><input id="ex_title" placeholder="قرطاسية، طباعة، مواصلات..."></div><div><label>المبلغ (د.ك)</label><input id="ex_amount" type="number" min=".001" step=".001"></div></div><div style="margin-top:10px"><label>ملاحظات</label><input id="ex_note"></div><p id="ex_err" class="sub"></p><button class="btn" id="ex_add">تسجيل المصروف</button></div>
+ <div class="box"><h2>سجل المصروفات</h2>${S.expenses.length?[...S.expenses].sort((a,b)=>(b.date||'').localeCompare(a.date||'')).map(e=>`<div class="sess"><div class="top"><b>${esc(e.title||'مصروف')}</b><b class="n">${kd(e.amount)}</b></div><div class="meta">${esc(e.date||'')} ${e.note?'• '+esc(e.note):''}</div><button class="btn sm del" data-exdel="${e.id}">حذف</button></div>`).join(''):'<div class="empty">لا توجد مصروفات مسجلة.</div>'}</div>`;
+ $('#ex_add').onclick=()=>{const amount=Number($('#ex_amount').value),title=$('#ex_title').value.trim();if(!title||!Number.isFinite(amount)||amount<=0){$('#ex_err').textContent='أدخل بند المصروف ومبلغًا أكبر من صفر.';return}S.expenses.push({id:uid('ex'),date:$('#ex_date').value||today(),title,amount,note:$('#ex_note').value.trim()});save();draw()};
+ document.querySelectorAll('[data-exdel]').forEach(b=>b.onclick=()=>{if(confirm('حذف هذا المصروف؟')){S.expenses=S.expenses.filter(e=>e.id!==b.dataset.exdel);save();draw()}});
+}
+function drawSchedule(){
+ const now=new Date(),todayKey=today(),future=[...S.appointments].sort((a,b)=>(a.date+a.time).localeCompare(b.date+b.time)),soon=future.filter(a=>(a.date||'')>=todayKey);
+ $('#main').innerHTML=`<div class="box"><h2>جدول المواعيد</h2><p class="sub">أضف مواعيد الحصص القادمة. يظهر تنبيه داخل السجل للمواعيد القريبة؛ ويمكن تفعيل إشعارات المتصفح إذا سمح الجهاز.</p><div class="row"><div><label>الطالب</label><select id="ap_sid"><option value="">موعد عام / جديد</option>${S.students.map(s=>`<option value="${s.id}">${esc(nm(s))}</option>`).join('')}</select></div><div><label>التاريخ</label><input id="ap_date" type="date" value="${todayKey}"></div><div><label>الوقت</label><input id="ap_time" type="time" value="16:00"></div><div><label>المدة بالدقائق</label><input id="ap_duration" type="number" min="15" step="15" value="60"></div></div><div style="margin-top:10px"><label>عنوان الموعد / ملاحظة</label><input id="ap_title" placeholder="رياضيات — مراجعة الوحدة الأولى"></div><p id="ap_err" class="sub"></p><button class="btn" id="ap_add">إضافة الموعد</button> <button class="btn ghost" id="ap_notify">تفعيل الإشعارات</button><span id="ap_notifymsg" class="sub"></span></div>
+ <div class="box"><div class="bar"><h2 style="margin:0">المواعيد القادمة (${soon.length})</h2><button class="btn ghost sm" id="ap_print">طباعة الجدول</button></div>${soon.length?soon.map(a=>`<div class="sess"><div class="top"><b>${esc(a.title||'موعد درس')}</b><span class="chip ${a.date===todayKey?'warn':'ok'}">${a.date===todayKey?'اليوم':esc(a.date)}</span></div><div class="meta">${esc(stu(a.sid).name==='(طالب محذوف)'?'موعد عام':stu(a.sid).name)} • ${esc(a.time||'--:--')} • ${+a.duration||60} دقيقة</div><button class="btn sm" data-apdone="${a.id}">تمت الحصة — تحويل إلى تسجيل</button> <button class="btn sm ghost" data-apedit="${a.id}">تعديل</button> <button class="btn sm del" data-apdel="${a.id}">حذف</button></div>`).join(''):'<div class="empty">لا توجد مواعيد قادمة.</div>'}</div>
+ <div class="box"><h2>تعارضات المواعيد</h2>${scheduleConflicts(soon)}</div>`;
+ $('#ap_add').onclick=()=>{const date=$('#ap_date').value,time=$('#ap_time').value,duration=Number($('#ap_duration').value),title=$('#ap_title').value.trim();if(!date||!time||!Number.isFinite(duration)||duration<1){$('#ap_err').textContent='تحقق من التاريخ والوقت والمدة.';return}const newA={id:uid('ap'),sid:$('#ap_sid').value,date,time,duration,title};const conflict=soon.some(a=>a.date===date&&overlap(a.time,a.duration,time,duration));if(conflict&&!confirm('يوجد موعد متداخل في هذا الوقت. هل تريد الحفظ على أي حال؟'))return;S.appointments.push(newA);save();draw()};
+ $('#ap_notify').onclick=async()=>{if(!('Notification' in window)){$('#ap_notifymsg').textContent='الإشعارات غير مدعومة في هذا المتصفح.';return}try{const p=await Notification.requestPermission();$('#ap_notifymsg').textContent=p==='granted'?'تم السماح بالإشعارات. يبقى السجل مفتوحًا لتحديث التنبيهات.':'لم يتم السماح بالإشعارات.'}catch(e){$('#ap_notifymsg').textContent='تعذر تفعيل الإشعارات.'}};
+ document.querySelectorAll('[data-apdel]').forEach(b=>b.onclick=()=>{if(confirm('حذف الموعد؟')){S.appointments=S.appointments.filter(a=>a.id!==b.dataset.apdel);save();draw()}});
+ document.querySelectorAll('[data-apedit]').forEach(b=>b.onclick=()=>editAppointment(b.dataset.apedit));
+ document.querySelectorAll('[data-apdone]').forEach(b=>b.onclick=()=>{const a=S.appointments.find(x=>x.id===b.dataset.apdone);if(!a)return;const start=a.time||'16:00',end=addMinutes(start,+a.duration||60);if(!a.sid){alert('اختر طالبًا لهذا الموعد أولًا عبر «تعديل»، ثم حوّله إلى حصة.');return}prefill={sid:a.sid,date:a.date,start,end};if(!prefill.sid){alert('أضف طالبًا أولًا لتحويل الموعد إلى حصة.');return}S.appointments=S.appointments.filter(x=>x.id!==a.id);tab='sessions';save();draw()});
+ $('#ap_print').onclick=()=>printTable('جدول المواعيد',`<table><thead><tr><th>التاريخ</th><th>الوقت</th><th>الطالب</th><th>الموعد</th><th>المدة</th></tr></thead><tbody>${soon.map(a=>`<tr><td>${esc(a.date)}</td><td>${esc(a.time)}</td><td>${esc(stu(a.sid).name)}</td><td>${esc(a.title)}</td><td>${+a.duration||60} دقيقة</td></tr>`).join('')}</tbody></table>`);
+}
+function overlap(t1,d1,t2,d2){const m=t=>{const p=(t||'00:00').split(':').map(Number);return p[0]*60+p[1]};return m(t1)<m(t2)+(+d2||60)&&m(t2)<m(t1)+(+d1||60)}
+function addMinutes(t,n){const p=t.split(':').map(Number),d=(p[0]*60+p[1]+n)%1440;return String(Math.floor(d/60)).padStart(2,'0')+':'+String(d%60).padStart(2,'0')}
+function scheduleConflicts(list){const pairs=[];for(let i=0;i<list.length;i++)for(let j=i+1;j<list.length;j++)if(list[i].date===list[j].date&&overlap(list[i].time,list[i].duration,list[j].time,list[j].duration))pairs.push(`${esc(list[i].date)}: ${esc(list[i].title||'موعد')} (${esc(list[i].time)}) يتداخل مع ${esc(list[j].title||'موعد')} (${esc(list[j].time)})`);return pairs.length?'<ul>'+pairs.map(x=>`<li>${x}</li>`).join('')+'</ul>':'<div class="empty">لا توجد تعارضات بين المواعيد القادمة.</div>'}
+function editAppointment(id){const a=S.appointments.find(x=>x.id===id);if(!a)return;modal('تعديل الموعد',`<div class="row"><div><label>الطالب</label><select id="ea_sid"><option value="">موعد عام</option>${S.students.map(t=>`<option value="${t.id}" ${t.id===a.sid?'selected':''}>${esc(nm(t))}</option>`).join('')}</select></div><div><label>التاريخ</label><input id="ea_date" type="date" value="${esc(a.date)}"></div><div><label>الوقت</label><input id="ea_time" type="time" value="${esc(a.time)}"></div><div><label>المدة</label><input id="ea_dur" type="number" min="15" step="15" value="${+a.duration||60}"></div></div><div style="margin-top:10px"><label>العنوان</label><input id="ea_title" value="${esc(a.title||'')}"></div><button class="btn" id="ea_save" style="margin-top:12px">حفظ</button>`,()=>{$('#ea_save').onclick=()=>{Object.assign(a,{sid:$('#ea_sid').value,date:$('#ea_date').value,time:$('#ea_time').value,duration:Math.max(15,+$('#ea_dur').value||60),title:$('#ea_title').value.trim()});save();$('#modalRoot').innerHTML='';draw()}})}
+function drawProgress(){
+ const sid=$('#pr_sid')?.value||S.students[0]?.id||'',t=stu(sid),items=S.progress.filter(p=>p.sid===sid).sort((a,b)=>(b.date||'').localeCompare(a.date||'')),ss=S.sessions.filter(s=>s.sid===sid&&s.att),avg=ss.filter(s=>+s.eng>0).length?sum(ss.filter(s=>+s.eng>0),s=>s.eng)/ss.filter(s=>+s.eng>0).length:0;
+ $('#main').innerHTML=`<div class="box"><h2>متابعة المستوى الرياضي</h2><div class="row"><div><label>الطالب</label><select id="pr_sid">${S.students.map(s=>`<option value="${s.id}" ${s.id===sid?'selected':''}>${esc(nm(s))}</option>`).join('')}</select></div><div class="stat"><b>${ss.length}</b><span>حصص حضور</span></div><div class="stat"><b>${avg?avg.toFixed(1)+'/5':'—'}</b><span>متوسط التفاعل</span></div></div><p class="sub">سجّل الموضوع الرياضي والمهارة ومستوى الإتقان والواجب التالي. هذه البيانات منفصلة عن ملاحظات الحصص الحالية.</p></div>
+ <div class="box"><h2>إضافة متابعة تعليمية</h2><div class="row"><div><label>التاريخ</label><input id="pr_date" type="date" value="${today()}"></div><div><label>الموضوع الرياضي</label><input id="pr_topic" placeholder="المعادلات التربيعية"></div><div><label>المهارة</label><input id="pr_skill" placeholder="التحليل إلى عوامل"></div><div><label>الإتقان</label><select id="pr_level"><option value="1">1 — يحتاج تأسيس</option><option value="2">2 — مبتدئ</option><option value="3" selected>3 — متوسط</option><option value="4">4 — جيد</option><option value="5">5 — متقن</option></select></div></div><div style="margin-top:10px"><label>ملاحظات / الواجب القادم</label><textarea id="pr_note" rows="2"></textarea></div><p id="pr_err" class="sub"></p><button class="btn" id="pr_add" ${S.students.length?'':'disabled'}>حفظ المتابعة</button></div>
+ <div class="box"><h2>سجل تطور الطالب</h2>${items.length?items.map(p=>`<div class="sess"><div class="top"><b>${esc(p.topic||'موضوع غير محدد')}</b><span class="stars">${'★'.repeat(+p.level||0)}${'☆'.repeat(5-(+p.level||0))}</span></div><div class="meta">${esc(p.date||'')} • المهارة: ${esc(p.skill||'—')} • ${['','يحتاج تأسيس','مبتدئ','متوسط','جيد','متقن'][+p.level||0]}</div>${p.note?`<p>${esc(p.note)}</p>`:''}<button class="btn sm del" data-prdel="${p.id}">حذف</button></div>`).join(''):'<div class="empty">لا توجد متابعات لهذا الطالب بعد.</div>'}</div>`;
+ $('#pr_sid').onchange=draw;
+ $('#pr_add').onclick=()=>{const topic=$('#pr_topic').value.trim();if(!sid||!topic){$('#pr_err').textContent='اختر طالبًا واكتب الموضوع الرياضي.';return}S.progress.push({id:uid('pr'),sid,date:$('#pr_date').value||today(),topic,skill:$('#pr_skill').value.trim(),level:+$('#pr_level').value,note:$('#pr_note').value.trim()});save();draw()};
+ document.querySelectorAll('[data-prdel]').forEach(b=>b.onclick=()=>{if(confirm('حذف سجل المتابعة؟')){S.progress=S.progress.filter(p=>p.id!==b.dataset.prdel);save();draw()}});
+}
+function printTable(title,tableHtml){
+ let o=$('#pv');if(!o){o=document.createElement('div');o.id='pv';document.body.appendChild(o)}
+ o.innerHTML='<div class="pvbar" style="position:fixed;top:0;left:0;right:0;z-index:5;display:flex;gap:8px;flex-wrap:wrap;padding:10px;padding-top:calc(10px + env(safe-area-inset-top,0px));background:var(--card);border-bottom:1px solid var(--line);direction:rtl"><button id="pvX" style="font:inherit;font-weight:700;border-radius:8px;padding:10px 18px;cursor:pointer;background:var(--card);color:var(--pri);border:1px solid var(--pri)">\u2190 \u0631\u062c\u0648\u0639</button><button id="pvP" style="font:inherit;font-weight:700;border-radius:8px;padding:10px 18px;cursor:pointer;background:var(--pri);color:var(--priT);border:0">\u0637\u0628\u0627\u0639\u0629</button><span id="pvM" style="font-size:.85rem;color:#5d7472;align-self:center"></span></div><div class="pvbody" style="padding:78px 16px 16px;color:#14213d"><style>.pvbody table{width:100%;min-width:0;border-collapse:collapse;font-size:12px}.pvbody th,.pvbody td{border:1px solid #ddd;padding:7px;text-align:right;color:#14213d}.pvbody th{background:#14213d;color:#fff}.pvbody h1{border-bottom:3px solid #b99645;padding-bottom:10px;color:#14213d}</style><h1>'+esc(title)+'</h1><div style="overflow-x:auto">'+tableHtml+'</div><p>\u062a\u0627\u0631\u064a\u062e \u0627\u0644\u0625\u0635\u062f\u0627\u0631: '+today()+'</p></div>';
+ o.classList.add('on');o.scrollTop=0;try{history.pushState({pv:1},'')}catch(e){}
+ $('#pvX').onclick=()=>o.classList.remove('on');
+ $('#pvP').onclick=()=>{try{window.print()}catch(e){$('#pvM').textContent='\u0627\u0644\u0637\u0628\u0627\u0639\u0629 \u063a\u064a\u0631 \u0645\u062a\u0627\u062d\u0629 \u0647\u0646\u0627\u060c \u0627\u0633\u062a\u062e\u062f\u0645 \u0642\u0627\u0626\u0645\u0629 \u0627\u0644\u0645\u0634\u0627\u0631\u0643\u0629.'}};
+}
+/* ---- end professional feature suite ---- */
+
+/* ---- live session timer ---- */
+let AC=null,prefill=null;
+const hhmm=ts=>{const d=new Date(ts);return String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0')};
+const clock=ms=>{const s=Math.max(0,Math.floor(ms/1000)),h=Math.floor(s/3600),m=Math.floor(s%3600/60);return (h?h+':':'')+String(m).padStart(2,'0')+':'+String(s%60).padStart(2,'0')};
+function beep(){try{AC=AC||new(window.AudioContext||window.webkitAudioContext)();const n=AC.currentTime;[0,0.35,0.7].forEach(o=>{const os=AC.createOscillator(),g=AC.createGain();os.frequency.value=880;os.connect(g);g.connect(AC.destination);g.gain.setValueAtTime(.25,n+o);g.gain.exponentialRampToValueAtTime(.001,n+o+.3);os.start(n+o);os.stop(n+o+.3)})}catch(e){}
+ try{navigator.vibrate&&navigator.vibrate([300,150,300,150,300])}catch(e){}}
+function liveHTML(){
+ if(!S.live)return `<h2>حصة جارية</h2><div class="row"><div><label>الطالب</label><select id="l_stu">${S.students.map(s=>`<option value="${s.id}">${esc(nm(s))}</option>`).join('')}</select></div><div><label>المنبه بعد (دقيقة)</label><input type="number" id="l_min" min="1" value="60"></div></div><div style="margin-top:10px"><button class="btn" id="l_go">▶ بدء الحصة الآن</button></div>`;
+ const L=S.live;return `<h2>حصة جارية: ${esc(stu(L.sid).name)}</h2><div class="clk" id="l_clk">${clock(Date.now()-L.ts)}</div><div class="meta n">بدأت ${hhmm(L.ts)} • المنبه بعد ${L.min} دقيقة ${L.fired?'• <b>انتهت المدة</b>':''}</div><div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn" id="l_end">■ إنهاء الحصة وتسجيلها</button><button class="btn ghost" id="l_x">إلغاء</button></div>`}
+function bindLive(){
+ const g=$('#l_go');if(g)g.onclick=()=>{try{AC=AC||new(window.AudioContext||window.webkitAudioContext)();AC.resume()}catch(e){}
+  try{if('Notification' in window&&Notification.permission==='default')Notification.requestPermission()}catch(e){}
+  S.live={sid:$('#l_stu').value,ts:Date.now(),min:Math.max(1,+$('#l_min').value||60),fired:false,ack:false};save();$('#liveBox').innerHTML=liveHTML();bindLive()};
+ const e=$('#l_end');if(e)e.onclick=()=>{const L=S.live;prefill={sid:L.sid,date:today(),start:hhmm(L.ts),end:hhmm(Date.now())};S.live=null;save();draw()};
+ const x=$('#l_x');if(x)x.onclick=()=>{S.live=null;save();draw()}}
+function appointmentTick(){
+ const now=new Date(),date=today(),hm=String(now.getHours()).padStart(2,'0')+':'+String(now.getMinutes()).padStart(2,'0');
+ for(const a of S.appointments){if(a.date!==date||!a.time||a.notified===date)continue;const delta=(a.time.split(':').map(Number)[0]*60+a.time.split(':').map(Number)[1])-(now.getHours()*60+now.getMinutes());if(delta>=0&&delta<=5){a.notified=date;save();const who=a.sid?stu(a.sid).name:'موعد جديد';try{if('Notification' in window&&Notification.permission==='granted')new Notification('موعد درس قريب',{body:who+' — '+(a.title||'حصة')+' الساعة '+a.time})}catch(e){}const el=$('#save');if(el){el.textContent='⏰ موعد قريب: '+who+' — '+a.time;el.classList.add('on');setTimeout(()=>{el.textContent='تم الحفظ';el.classList.remove('on')},7000)}}}
+}
+function tick(){appointmentTick();const L=S.live,a=$('#alarm');if(!L){a.classList.remove('on');return}
+ const el=Date.now()-L.ts,c=$('#l_clk');if(c)c.textContent=clock(el);
+ if(!L.fired&&el>=L.min*60000){L.fired=true;L.ack=false;save();beep();try{if('Notification' in window&&Notification.permission==='granted')new Notification('انتهت مدة الحصة',{body:stu(L.sid).name})}catch(e){}
+  if(tab==='sessions'&&$('#liveBox')){$('#liveBox').innerHTML=liveHTML();bindLive()}}
+ else if(L.fired&&!L.ack&&Math.floor(el/1000)%15===0)beep();
+ a.classList.toggle('on',!!(L.fired&&!L.ack));if(L.fired&&!L.ack)$('#alarmT').textContent='⏰ مرّ '+L.min+' دقيقة على بداية حصة '+stu(L.sid).name}
+$('#alarmOk').onclick=()=>{if(S.live){S.live.ack=true;save()}tick()};
+setInterval(tick,1000);document.addEventListener('visibilitychange',tick);
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){const o=$('#pv');if(o)o.classList.remove('on')}});
+window.addEventListener('popstate',()=>{const o=$('#pv');if(o)o.classList.remove('on')});
+/* ---- print ---- */
+function printReport(id){const t=S.students.find(x=>x.id===id);if(!t)return;alloc();
+ let o=$('#pv');if(!o){o=document.createElement('div');o.id='pv';document.body.appendChild(o)}
+ const body=reportHTML(t);
+ o.innerHTML='<div class="pvbar" style="position:fixed;top:0;left:0;right:0;z-index:5;display:flex;gap:8px;flex-wrap:wrap;padding:10px;padding-top:calc(10px + env(safe-area-inset-top,0px));background:var(--card);border-bottom:1px solid var(--line);direction:rtl"><button id="pvX" style="font:inherit;font-weight:700;border-radius:8px;padding:10px 18px;cursor:pointer;background:var(--card);color:var(--pri);border:1px solid var(--pri)">← رجوع</button><button id="pvP" style="font:inherit;font-weight:700;border-radius:8px;padding:10px 18px;cursor:pointer;background:var(--pri);color:var(--priT);border:0">طباعة</button><button id="pvH" style="font:inherit;font-weight:700;border-radius:8px;padding:10px 18px;cursor:pointer;background:var(--card);color:var(--pri);border:1px solid var(--pri)">حفظ كملف للطباعة</button><span id="pvM" style="font-size:.85rem;color:#5d7472;align-self:center"></span></div><div class="pvbody" style="padding-top:78px">'+body+'</div>';
+ o.classList.add('on');o.scrollTop=0;try{history.pushState({pv:1},'')}catch(e){}
+ $('#pvX').onclick=()=>o.classList.remove('on');
+ $('#pvP').onclick=()=>{try{window.print()}catch(e){$('#pvM').textContent='الطباعة غير متاحة هنا، استخدم «حفظ كملف للطباعة».'}};
+ $('#pvH').onclick=async()=>{try{const d=await claude.use('downloads');if(!d)throw 0;
+  await d.save({filename:'تقرير-'+t.name.replace(/[^\w\u0600-\u06FF ]/g,'')+'.html',data:'<!doctype html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>تقرير '+esc(nm(t))+'</title><style>@page{size:A4;margin:10mm}body{margin:0;-webkit-print-color-adjust:exact;print-color-adjust:exact}tr{break-inside:avoid}@media print{.np{display:none}}</style></head><body><div class="np" style="padding:10px"><button onclick="if(history.length>1)history.back();else window.close()" style="font:inherit;padding:8px 16px">← رجوع</button> <button onclick="window.print()" style="font:inherit;padding:8px 16px">طباعة</button></div>'+body+'</body></html>'});
+  $('#pvM').textContent='تم تجهيز الملف، افتحه واطبعه.'}catch(e){$('#pvM').textContent='تعذر حفظ الملف.'}}}
+/* ---- parent reports ---- */
+function repData(t){const L=S.sessions.filter(s=>s.sid===t.id&&(!fMonth||s.date.startsWith(fMonth))).sort((a,b)=>(a.date+a.start).localeCompare(b.date+b.start));
+ const A=L.filter(s=>s.att),ev=A.filter(s=>s.eng>0),due=sum(L,s=>s.due),paid=sum(L,eff);let per='كل الحصص';
+ if(fMonth){try{per=new Date(fMonth+'-01T00:00:00').toLocaleDateString('ar',{month:'long',year:'numeric'})}catch(e){per=fMonth}}
+ return{L,n:L.length,att:A.length,abs:L.length-A.length,pct:L.length?Math.round(A.length/L.length*100):0,avg:ev.length?(sum(ev,s=>s.eng)/ev.length).toFixed(1):'-',due,paid,rem:Math.max(0,due-paid),bal:credit[fk(t.id)]||0,period:per}}
+function waText(t){const r=repData(t);return '*تقرير الطالب: '+t.name+'*\n'+(S.teacher?'المعلم: '+S.teacher+'\n':'')+'الفترة: '+r.period+'\n\nعدد الحصص: '+r.n+' (حضر '+r.att+' / غاب '+r.abs+')\nنسبة الحضور: '+r.pct+'%\nمتوسط التفاعل: '+r.avg+' من 5\n\nالمستحق: '+kd(r.due)+'\nالمدفوع: '+kd(r.paid)+'\nالمتبقي: '+kd(r.rem)+(r.bal>0?'\nرصيد مقدم: '+kd(r.bal):'')+'\n\n*تفاصيل الحصص:*\n'+r.L.map(s=>'- '+s.date+' ('+s.start+' - '+s.end+') '+(s.att?'حضر':'غاب')+(s.att&&s.eng?' | تفاعل '+s.eng+'/5':'')+' | '+kd(s.due)).join('\n')+(r.L.some(s=>s.note)?'\n\n*ملاحظات المعلم:*\n'+r.L.filter(s=>s.note).map(s=>'- '+s.date+': '+s.note).join('\n'):'')+'\n\nشكرًا لكم.'}
+function sendWA(id){const t=S.students.find(x=>x.id===id);if(!t)return;alloc();const text=waText(t),d=(t.phone||'').replace(/\D/g,'').replace(/^00/,''),num=d.length===8?'965'+d:d,msg=$('#rpMsg'),ta=$('#rpT');
+ let w=null;try{w=window.open('https://wa.me/'+num+'?text='+encodeURIComponent(text),'_blank')}catch(e){}
+ if(!w){ta.hidden=false;ta.value=text;msg.textContent='تعذر فتح واتساب مباشرة. انسخ النص أدناه وأرسله يدويًا.'}else{ta.hidden=true;msg.textContent='تم فتح واتساب.'}}
+function reportHTML(t){const r=repData(t),C='#0f5a57',cd=(a,b)=>`<div style="flex:1;border:1px solid #cddad7;border-radius:10px;padding:10px 12px;background:#f5f8f7"><div style="font-size:12px;color:#5d7472">${a}</div><div style="font-size:18px;font-weight:700">${b}</div></div>`,
+ th=x=>`<th style="padding:8px 4px;background:${C};color:#fff;font-size:12px;text-align:center">${x}</th>`,
+ td=(x,st='')=>`<td style="padding:7px 4px;border-bottom:1px solid #dfe8e5;font-size:12px;text-align:center;${st}">${x}</td>`;
+ const pays=S.payments.filter(p=>p.sid===t.id&&(!fMonth||(p.date||'').startsWith(fMonth)));
+ const items=r.L.map(s=>({d:s.date+(s.start||''),s})).sort((x,y)=>x.d.localeCompare(y.d));
+ const rows=items.map((it,i)=>{
+  if(it.p){const p=it.p;return `<tr><td colspan="10" style="padding:9px 8px;border-bottom:1px solid #dfe8e5;font-size:12px;text-align:center;font-weight:700;background:color-mix(in srgb,var(--pri,#0f5a57) 18%,#fff);color:var(--pri,#0f5a57)">💰 دفعة من ولي الأمر بتاريخ ${p.date||'-'}${p.date?' ('+dayN(p.date)+')':''}: ${kd(p.amount)}</td></tr>`}
+  const s=it.s,bg=i%2?'background:#f7faf9;':'',k=status(s)[1],stx={ok:'مدفوع',bad:'غير مدفوع',warn:+s.due>0?'جزئي':'-'}[k];
+  return '<tr>'+td(s.date,bg)+td(dayN(s.date),bg)+td(s.start,bg)+td(s.end,bg)+td(dur(mins(s.start,s.end))||'-',bg)+td(s.att?'حضر':'غاب',bg+'font-weight:700;color:'+(s.att?'#1d7a4a':'#b3341f'))+td(s.att&&s.eng?'<span style="color:#d99a00">'+'★'.repeat(s.eng)+'</span>':'-',bg)+td(kd(s.due),bg)+td(kd(eff(s)),bg)+td(stx,bg)+'</tr>'}).join('');
+ const nt=r.L.filter(s=>s.note);
+ const sp=[...pays].sort((x,y)=>(x.date||'').localeCompare(y.date||'')),zb=i=>i%2?'background:#f7faf9;':'';
+ const payHTML=sp.length?`<div style="font-size:16px;font-weight:700;margin:20px 0 8px;color:${C}">الدفعات</div><table style="width:100%;border-collapse:collapse"><thead><tr>${['التاريخ','اليوم','المبلغ'].map(th).join('')}</tr></thead><tbody>${sp.map((p,i)=>'<tr>'+td(p.date||'-',zb(i))+td(p.date?dayN(p.date):'-',zb(i))+td(kd(p.amount),zb(i)+'font-weight:700')+'</tr>').join('')}<tr>${td('المجموع','font-weight:700;border-top:2px solid #12302f')}${td('','border-top:2px solid #12302f')}${td(kd(sum(sp,p=>p.amount)),'font-weight:700;border-top:2px solid #12302f')}</tr></tbody></table>`:'';
+ return `<div dir="rtl" style="font-family:'IBM Plex Sans Arabic',Tahoma,sans-serif;color:#12302f;background:#fff"><div style="background:${C};color:#fff;padding:26px 32px"><div style="font-size:13px;opacity:.85">تقرير متابعة الدروس الخصوصية - الرياضيات</div><div style="font-size:28px;font-weight:700;margin-top:4px">${esc(nm(t))}</div><div style="font-size:13px;margin-top:6px;opacity:.9">${esc(t.grade||'')} ${t.grade?'•':''} الفترة: ${r.period}${S.teacher?' • المعلم: '+esc(S.teacher):''}</div></div>
+ <div style="padding:22px 32px"><div style="display:flex;gap:10px">${cd('عدد الحصص',r.n)}${cd('حضر / غاب',r.att+' / '+r.abs)}${cd('نسبة الحضور',r.pct+'%')}${cd('متوسط التفاعل',r.avg+' / 5')}</div>
+ <div style="display:flex;gap:10px;margin-top:10px">${cd('المستحق',kd(r.due))}${cd('المدفوع',kd(r.paid))}${cd('المتبقي',kd(r.rem))}${r.bal>0?cd('رصيد مقدم',kd(r.bal)):''}</div>
+ <div style="font-size:16px;font-weight:700;margin:20px 0 8px;color:${C}">تفاصيل الحصص</div>
+ ${r.L.length?`<table style="width:100%;border-collapse:collapse"><thead><tr>${['التاريخ','اليوم','بداية الحصة','نهاية الحصة','المدة','الحضور','التفاعل','المستحق','المدفوع','الحالة'].map(th).join('')}</tr></thead><tbody>${rows}</tbody></table>`:'<div style="color:#5d7472">لا توجد حصص في هذه الفترة.</div>'}
+ ${payHTML}
+ ${nt.length?`<div style="font-size:16px;font-weight:700;margin:20px 0 8px;color:${C}">ملاحظات المعلم</div>${nt.map(s=>`<div style="font-size:13px;padding:6px 0;border-bottom:1px solid #dfe8e5"><b>${s.date}:</b> ${esc(s.note)}</div>`).join('')}`:''}
+ <div style="margin-top:26px;font-size:11px;color:#5d7472;text-align:center">تاريخ الإصدار: ${today()}</div></div></div>`}
+async function makePDF(t){const host=document.createElement('div');host.style.cssText='position:absolute;left:-10000px;top:0;width:794px;background:#fff';host.innerHTML=reportHTML(t);document.body.appendChild(host);
+ try{try{await document.fonts.ready}catch(e){}
+  const cv=await html2canvas(host,{scale:2,backgroundColor:'#ffffff'}),pdf=new window.jspdf.jsPDF({unit:'pt',format:'a4'}),pw=pdf.internal.pageSize.getWidth(),ph=pdf.internal.pageSize.getHeight(),pagePx=Math.floor(cv.width*ph/pw);
+  for(let y=0,first=true;y<cv.height;y+=pagePx){const h=Math.min(pagePx,cv.height-y),c=document.createElement('canvas');c.width=cv.width;c.height=h;c.getContext('2d').drawImage(cv,0,y,cv.width,h,0,0,cv.width,h);if(!first)pdf.addPage();first=false;pdf.addImage(c.toDataURL('image/jpeg',0.92),'JPEG',0,0,pw,h*pw/cv.width)}
+  return pdf.output('blob')}finally{host.remove()}}
+async function sendPDF(id,b){const t=S.students.find(x=>x.id===id),msg=$('#rpMsg');if(!t)return;
+ if(!window.jspdf||!window.html2canvas){msg.textContent='تعذر تحميل أدوات PDF. تأكد من الإنترنت وأعد المحاولة.';return}
+ b.disabled=true;msg.textContent='جاري تجهيز التقرير...';
+ try{alloc();const blob=await makePDF(t),d=await claude.use('downloads');if(!d)throw{code:'unavailable'};
+  await d.save({filename:'تقرير-'+t.name.replace(/[^\w\u0600-\u06FF ]/g,'')+'.pdf',data:blob});msg.textContent='تم تجهيز الملف. أرسله لولي الأمر عبر المشاركة (واتساب).'}
+ catch(e){msg.textContent=e&&e.code==='declined'?'تم الإلغاء.':'تعذر تجهيز ملف PDF.'}
+ b.disabled=false}
+
+$('#syncNow').onclick=async()=>{const m=$('#syncM');m.textContent='جارٍ فحص المزامنة...';try{const [db,user]=await Promise.all([claude.use('db'),claude.use('user')]);if(!db||!user)throw 0;const id=await user.id();if(!id)throw 0;docRef=db.collection('data/users/'+id).doc('tutor');await docRef.set(JSON.parse(JSON.stringify(S)));cloudState='متصل';m.textContent='تمت مزامنة البيانات مع الحساب الحالي.'}catch(e){cloudState='محلي فقط';m.textContent='المزامنة السحابية غير متاحة في هذه البيئة. بياناتك محفوظة محليًا؛ استخدم النسخة الاحتياطية لنقلها بين الأجهزة.'}};
+
+$('#bkB').onclick=async()=>{const clean=JSON.parse(JSON.stringify(S));clean.sessions=clean.sessions.map(({_adv,...r})=>r);const data=JSON.stringify({schemaVersion:2,exportedAt:new Date().toISOString(),...clean},null,2);let ok=false;try{const d=await claude.use('downloads');if(d){await d.save({filename:'tutoring-backup-'+today()+'.json',data});ok=true}}catch(e){}
+ if(!ok){try{downloadBlob(data,'tutor-backup-'+today()+'.json','application/json;charset=utf-8');ok=true}catch(e){}}$('#bkM').textContent=ok?'تم تجهيز ملف النسخة الاحتياطية. احفظه في تطبيق «الملفات» (iCloud Drive).':'تعذر التنزيل: انسخ النص أدناه واحفظه في تطبيق «ملاحظات».';if(!ok){const t=$('#bkT');t.hidden=false;t.value=data;t.select()}};
+$('#bkR').onchange=async e=>{const f=e.target.files[0];if(!f)return;try{const o=JSON.parse(await f.text());if(!Array.isArray(o.students)||!Array.isArray(o.sessions))throw 0;if(!confirm('سيتم استبدال البيانات الحالية بالنسخة الاحتياطية. هل تريد المتابعة؟'))return;S=Object.assign({students:[],sessions:[],payments:[],appointments:[],expenses:[],progress:[],parents:[]},o);['students','sessions','payments','appointments','expenses','progress','parents'].forEach(k=>{if(!Array.isArray(S[k]))S[k]=[]});await save();draw();$('#bkM').textContent='تمت الاستعادة بنجاح، مع الاحتفاظ بالإعدادات والبيانات المدعومة.'}catch(x){$('#bkM').textContent='الملف غير صالح.'}e.target.value=''};
+init();
+</script>
+</body>
+</html>
